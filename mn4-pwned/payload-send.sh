@@ -10,7 +10,7 @@ sudo ./scripts/ctrl-gadget.sh reset
 sleep 2
 
 SHA1_EXPECTED="2a58d68aa287804d9a456dcf2214cad3827c7e3f"
-PAYLOAD="payload.txt"
+PAYLOAD="pwn.txt"
 PAYLOAD_FINAL=${1-$PAYLOAD}
 
 confirm() {

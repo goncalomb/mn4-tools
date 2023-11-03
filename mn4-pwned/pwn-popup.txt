@@ -1,0 +1,19 @@
+#!/bin/bash
+
+set -euo pipefail
+
+#
+# pwned popup
+#
+# Shows a message on the screen by calling a dbus method. Found by analyzing
+# the firmware. Many other services are available on dbus. For a later time...
+#
+
+dbus-send --system --print-reply --type=method_call --dest=com.lge.PopupManager \
+    /com/lge/PopupManager \
+    com.lge.PopupManager.Service.CreatePopup \
+    string:'{"type":"CONFIRM","data":{"title":"PWNED!","text":"'"`id`"'","timer":"2500"}}'
+dbus-send --system --print-reply --type=method_call --dest=com.lge.PopupManager \
+    /com/lge/PopupManager \
+    com.lge.PopupManager.Service.ShowPopup \
+    int32:7000000

