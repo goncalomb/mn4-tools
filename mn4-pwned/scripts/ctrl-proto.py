@@ -173,6 +173,7 @@ class ProtoYellowRequestType(enum.Enum):
     GET_FILE = 3
     # XXX: requires reverse engineering serialization format, not worth it
     # QUERY_INFO = 4
+    DELETE_FILE = 6
 
 class ProtoYellowResponseType(enum.Enum):
     SUCCESS = 0
@@ -243,6 +244,13 @@ class ProtoYellow(ProtoExchange):
         # writer.write_pack('<BB', 0, 0) # XXX: position and length, unknown format
         writer.done()
 
+    def delete_file(self, remote, on_error=None):
+        writer = self._do_request(on_error=on_error)
+        writer.write_pack('<B', ProtoYellowRequestType.DELETE_FILE.value)
+        writer.write_string(remote)
+        writer.write_pack('<B', 0) # XXX: recursive, not used
+        writer.done()
+
 # CLI stuff.
 
 def open_serial():
@@ -286,6 +294,13 @@ def command_pull(args):
         print(bytes(data), file=sys.stderr)
     yll.get_file(args.remote, args.local, on_error=on_error)
 
+def command_delete(args):
+    global yll
+    def on_error(data):
+        print("response error (delete): ", end='', file=sys.stderr)
+        print(bytes(data), file=sys.stderr)
+    yll.delete_file(args.remote, on_error=on_error)
+
 def register_commands(parser, exit_fn=None):
     subparsers = parser.add_subparsers(title='commands', dest='command')
 
@@ -299,6 +314,7 @@ def register_commands(parser, exit_fn=None):
 
     register_command('push', command_push, ['local', 'remote'])
     register_command('pull', command_pull, ['remote', 'local'])
+    register_command('delete', command_delete, ['remote'])
     if exit_fn:
         register_command('exit', exit_fn)
 

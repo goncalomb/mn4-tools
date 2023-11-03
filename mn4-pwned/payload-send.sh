@@ -5,6 +5,7 @@ cd -- "$(dirname -- "$0")"
 
 mkdir -p tmp
 
+echo "resetting gadget..."
 sudo ./scripts/ctrl-gadget.sh reset
 sleep 2
 
@@ -48,8 +49,8 @@ else
     } >tmp/main-ulc.xs.pwn
 
     SHA1=$(sha1sum tmp/main-ulc.xs | head -c40)
+    echo "file hash = $SHA1"
     if [ "$SHA1" != "$SHA1_EXPECTED" ]; then
-        echo "file hash = $SHA1"
         echo " expected = $SHA1_EXPECTED"
         echo "file 'tmp/main-ulc.xs' does not match expected content"
         echo "check the file 'tmp/main-ulc.xs.pwn'"
