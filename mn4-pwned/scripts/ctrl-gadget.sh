@@ -3,6 +3,8 @@
 set -euo pipefail
 cd -- "$(dirname -- "$0")"
 
+# configures a USB gadget to a simulate a Android Open Accessory (AOA) device
+
 G_NAME="mn4gadget"
 
 modprobe libcomposite
@@ -12,6 +14,8 @@ cmd_create() {
     mkdir "$G_NAME"
     cd "$G_NAME"
 
+    # https://source.android.com/docs/core/interaction/accessories/aoa
+    # Google's vendor and product ID
     echo 0x18d1 >idVendor
     echo 0x2d00 >idProduct
 

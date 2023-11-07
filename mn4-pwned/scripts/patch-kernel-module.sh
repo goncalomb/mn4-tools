@@ -3,6 +3,9 @@
 set -euo pipefail
 cd -- "$(dirname -- "$0")"
 
+# patches f_serial.c to set 'bInterfaceSubClass = USB_SUBCLASS_VENDOR_SPEC'
+# to match the expected value used by Android Open Accessory (AOA)
+
 K_RELEASE=$(uname -r)
 K_MODULES="/lib/modules/$K_RELEASE"
 K_MODULES_OUR="$K_MODULES/usb_f_serial_patched.ko"

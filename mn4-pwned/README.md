@@ -43,7 +43,7 @@ Read all the instructions before starting so that you have an idea of what is re
 ### Setup
 
 * Setup a microSD card with a fresh Raspberry Pi OS installation;
-    * I suggest just using the [https://www.raspberrypi.com/software/](official imager).
+    * I suggest just using the [official imager](https://www.raspberrypi.com/software/).
     * Tested with Raspberry Pi OS Lite (32-bit) (2023-10-10).
 * Enable SSH, set password and configure wireless network;
     * You can do all this using the official imager or other methods.
@@ -72,9 +72,9 @@ This involves connecting the Raspberry Pi to the target device using a standard 
 * Run `./setup.sh`, after a few seconds you will see the message "gadget created";
 * On the target device, you should see "Phone connected! Waiting for maps to be transferred.";
 * Run `./payload-send.sh` to create the backdoor and deliver the payload;
-* Optionally run `./cleanup.sh`;
+* Optionally run `./cleanup.sh` to close the connection;
 * Click "Exit update" on the target device;
 
-To run the payload just go back into "Update with Phone". For a few seconds, you should see a message "PWNED!" showing the root use id.
+To run the payload just go back into "Update with Phone". For a few seconds, you should see the message "PWNED!" showing the root user id.
 
 Other payloads (bash scripts) can be delivered as an argument to `./payload-send.sh`. To remove the backdoor and payload use `./payload-clear.sh`.
