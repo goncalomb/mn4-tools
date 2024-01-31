@@ -1,12 +1,16 @@
-# Media Nav 4 Pwned (mn4-pwned)
+# MediaNav 4 Pwned (mn4-pwned)
 
-This directory contains scripts capable of pwning the Media Nav 4 (target device) with recent firmware versions.
+This directory contains scripts capable of pwning the MediaNav 4 (target device).
 
-It uses a bespoke implementation of a communication protocol used to send/receive files to/from the target device. Officially, this protocol is used to update the navigation maps on the device but it can also be used to update arbitrary files.
+The latest versions of the firmware (6.0.9.8+) removed a well-known backdoor that used an `autorun_bavn/autorun.sh` script on a USB drive to run code as root. This page details a new procedure to regain that ability without a modified update file.
+
+It uses a bespoke implementation of a communication protocol used to send/receive files to/from the target device. Officially, this protocol is used to update the navigation maps on the device but it can also be used to update arbitrary files. That unrestricted ability can be used to create a new backdoor.
+
+Check the accompanying blog post to understand the motivation and see how this was developed:
+
+https://goncalomb.com/blog/2024/01/30/f57cf19b-how-i-also-hacked-my-car
 
 This project does not contain any proprietary code. All code is original.
-
-The procedure was created by reverse engineering the original firmware.
 
 ## Overview
 
