@@ -11,22 +11,33 @@ K_MODULES="/lib/modules/$K_RELEASE"
 K_MODULES_OUR="$K_MODULES/usb_f_serial_patched.ko"
 
 if [ ! -f "$K_MODULES_OUR" ]; then
-    K_SOURCE=$(find /usr/src/ -maxdepth 1 -name "linux-source-*.tar.*")
-    if [ -z "$K_SOURCE" ]; then
-        echo "getting kernel source..."
-        apt-get -y install build-essential linux-source
-        K_SOURCE=$(find /usr/src/ -maxdepth 1 -name "linux-source-*.tar.*")
-    fi
+    # based on:
+    # https://github.com/RPi-Distro/rpi-source/blob/master/rpi-source
+    # https://github.com/RPi-Distro/rpi-source/issues/25
 
-    if [ ! -d linux-source ]; then
-        echo "extracting kernel source..."
-        tar -xf "$K_SOURCE"
-        mv linux-source-* linux-source
+    K_HASH=$(zcat /usr/share/doc/linux-image-$K_RELEASE/changelog.Debian.gz | grep -F -m1 "Linux commit" | grep -Pio "[0-9a-f]{40}" || true)
+    [ -z "$K_HASH" ] && echo "failed to find kernel commit hash" && exit 1
+
+    K_SOURCE="linux-source/linux-$K_HASH"
+    if [ ! -f "$K_SOURCE/Kconfig" ]; then
+        mkdir -p "$K_SOURCE"
+        (
+            cd "$K_SOURCE"
+            apt-get -y install build-essential flex bison bc
+            echo "getting kernel source..."
+            git init -q
+            git remote add origin https://github.com/raspberrypi/linux.git || true
+            git fetch --depth 1 origin "$K_HASH"
+            # too slow, we'll use some plumbing commands
+            # git -c advice.detachedHead=false checkout FETCH_HEAD
+            echo "unpacking kernel source..."
+            git read-tree FETCH_HEAD && git checkout-index -a
+        )
     fi
 
     (
+        cd "$K_SOURCE"
         echo "building kernel module..."
-        cd linux-source
         # patch
         sed -i "s/bInterfaceSubClass.*=.*0/bInterfaceSubClass = USB_SUBCLASS_VENDOR_SPEC/g" drivers/usb/gadget/function/f_serial.c
         # build
