@@ -15,6 +15,12 @@ fi
 
 [ -f /tmp/.reboot ] && echo "reboot required to continue" && exit 1
 
-if ! command -v socat >/dev/null; then
-    sudo apt-get -y install socat
+CMDS=(git socat)
+CMDS_FINAL=()
+for CMD in "${CMDS[@]}"; do
+    command -v "$CMD" >/dev/null || CMDS_FINAL+=("$CMD")
+done
+if [ ${#CMDS_FINAL[@]} -ne 0 ]; then
+    sudo apt-get -y update
+    sudo apt-get -y install "${CMDS_FINAL[@]}"
 fi
